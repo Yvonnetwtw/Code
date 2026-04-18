@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>數位名片 | 專業高級版</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'beige-bg': '#F2ECE6', 'card-white': '#FFFFFF', 'gold-accent': '#B68956', 'dark-text': '#2E2A27', 'gray-text': '#7A726A',
+                    },
+                    borderRadius: { '3xl': '24px' },
+                    boxShadow: { 'premium': '0 20px 50px -12px rgba(46, 42, 39, 0.12)' }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #F2ECE6; -webkit-tap-highlight-color: transparent; }
+        .header-curve-bg { clip-path: ellipse(120% 100% at 50% 0%); background: linear-gradient(135deg, #2E2A27 0%, #4A443F 100%); }
+        .transition-standard { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; opacity: 0; }
+        .accordion-active .accordion-content { max-height: 200px; opacity: 1; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+        .toast-animate { animation: fadeInUp 0.4s ease forwards; }
+        .min-h-screen-ios { min-height: -webkit-fill-available; }
+        .form-input:focus { outline: none; border-color: #B68956; }
+        .btn-loading { pointer-events: none; opacity: 0.6; }
+    </style>
+</head>
+<body class="flex justify-center items-start md:py-12 min-h-screen-ios">
+
+    <main id="app" class="w-full max-w-md bg-white md:rounded-3xl shadow-premium relative flex flex-col min-h-screen md:min-h-[844px] overflow-hidden">
+        <!-- 頂部視覺 -->
+        <section class="relative h-48 w-full">
+            <div class="absolute inset-0 header-curve-bg"></div>
+            <div class="absolute -bottom-16 left-1/2 -translate-x-1/2 z-20">
+                <img id="profile-img" src="" class="w-32 h-32 rounded-full border-4 border-white bg-white object-cover shadow-xl cursor-pointer transition-standard" onclick="toggleModal(true)">
+            </div>
+        </section>
+
+        <!-- 資訊區 -->
+        <section class="mt-20 px-8 text-center z-10">
+            <h1 id="name-zh" class="text-2xl font-bold text-dark-text"></h1>
+            <p id="name-en" class="text-sm font-medium text-gold-accent uppercase tracking-widest mt-1"></p>
+            <p id="job-title" class="text-gray-text mt-3 font-medium"></p>
+            <p id="slogan" class="text-sm text-gray-text italic mt-2 opacity-80"></p>
+            <div class="mt-6 flex gap-3 justify-center">
+                <button onclick="toggleModal(true)" class="px-6 py-2 border border-gold-accent text-gold-accent rounded-full text-sm font-medium hover:bg-gold-accent hover:text-white transition-standard">關於我 About</button>
+                <button onclick="toggleConsultationModal(true)" class="px-6 py-2 bg-gold-accent text-white rounded-full text-sm font-medium hover:bg-[#A37849] transition-standard shadow-md">預約諮詢 Book</button>
+            </div>
+        </section>
+
+        <!-- 社群按鈕 -->
+        <section id="social-grid" class="mt-10 px-8 grid grid-cols-4 gap-4"></section>
+
+        <!-- 服務項目 -->
+        <section class="mt-10 px-8 mb-10">
+            <h3 class="text-xs font-bold text-gray-text uppercase tracking-widest mb-4 flex items-center">
+                <span class="w-8 h-px bg-gold-accent/30 mr-3"></span>專業服務項目
+            </h3>
+            <div id="service-accordion" class="space-y-3"></div>
+        </section>
+
+        <!-- QR Code -->
+        <section class="mt-auto px-8 py-8 bg-beige-bg/50 border-t border-beige-bg">
+            <div class="bg-white p-6 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer group" onclick="toggleQRLightbox(true)">
+                <div>
+                    <h4 id="qr-title" class="text-sm font-bold text-dark-text"></h4>
+                    <p id="qr-desc" class="text-xs text-gray-text mt-1"></p>
+                </div>
+                <div class="w-16 h-16 bg-beige-bg rounded-lg p-1 group-hover:scale-105 transition-standard" id="qr-container">
+                    <svg viewBox="0 0 100 100" class="w-full h-full fill-dark-text opacity-20"><path d="M10 10h30v30h-30zM15 15h20v20h-20zM60 10h30v30h-30zM65 15h20v20h-20zM10 60h30v30h-30zM15 65h20v20h-20zM50 50h10v10h-10zM70 70h20v20h-20z" /></svg>
+                </div>
+            </div>
+        </section>
+
+        <footer class="p-6 pt-0 bg-beige-bg/50">
+            <button onclick="copyShareLink()" class="w-full bg-dark-text text-white py-4 rounded-2xl font-bold transition-standard active:scale-95 flex items-center justify-center gap-2 shadow-lg">
+                分享數位名片
+            </button>
+        </footer>
+    </main>
+
+    <!-- 彈窗：預約表單 -->
+    <div id="modal-consultation" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-dark-text/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-8 shadow-2xl transform translate-y-4 transition-transform duration-300">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-dark-text">預約諮詢</h3>
+                <button onclick="toggleConsultationModal(false)" class="text-gray-text hover:text-dark-text"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            <form id="consultation-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <input type="text" id="form-name" required class="w-full px-4 py-3 bg-beige-bg/50 rounded-xl text-sm form-input" placeholder="您的姓名">
+                <input type="email" id="form-email" required class="w-full px-4 py-3 bg-beige-bg/50 rounded-xl text-sm form-input" placeholder="電子郵件">
+                <input type="tel" id="form-phone" required class="w-full px-4 py-3 bg-beige-bg/50 rounded-xl text-sm form-input" placeholder="聯絡電話">
+                <textarea id="form-message" rows="3" required class="w-full px-4 py-3 bg-beige-bg/50 rounded-xl text-sm form-input resize-none" placeholder="詢問內容"></textarea>
+                <button type="submit" id="submit-btn" class="w-full bg-gold-accent text-white py-4 rounded-xl font-bold shadow-lg transition-standard">提交申請</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 關於我彈窗與 QR 彈窗省略，與之前相同 -->
+    <div id="modal-about" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-dark-text/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-8 shadow-2xl transform translate-y-4 transition-transform duration-300">
+            <h3 class="text-xl font-bold mb-4">關於我</h3>
+            <p id="about-desc" class="text-gray-text text-sm leading-relaxed"></p>
+            <button onclick="toggleModal(false)" class="w-full mt-6 bg-gold-accent text-white py-3 rounded-xl">關閉</button>
+        </div>
+    </div>
+
+    <div id="modal-qr" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-dark-text/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-3xl text-center max-w-xs transform scale-90 transition-transform duration-300">
+            <h3 class="font-bold mb-4">掃描 QR Code</h3>
+            <div id="qr-large" class="bg-beige-bg p-4 rounded-2xl flex items-center justify-center"></div>
+            <button onclick="toggleQRLightbox(false)" class="mt-6 text-gray-text text-sm">點擊關閉</button>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] bg-dark-text text-white px-6 py-3 rounded-full text-sm hidden toast-animate">
+        <span id="toast-text">訊息內容</span>
+    </div>
+
+    <script>
+        // 資料與初始化邏輯 - 修改成你試算表的路徑
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRzhtNNBOneLKaPDQc0BV58cLyT6_nj47pG_kFV3CuQGAv2KxEa1wDYf2NqMAY8MPTVlMpxXL-eby4c/pub?gid=1853070506&single=true&output=csv";
+        const CONFIG = {
+            profile: { nameZh: "林慕白", nameEn: "Ethan Lin", title: "資深品牌策略顧問", slogan: "「以極簡定義繁華，以數位傳遞溫度」", description: "擁有超過十年的跨國品牌轉型經驗。", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop" },
+            socials: [
+                { id: 'IG', link: '#', svg: '<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>' },
+                { id: 'LINE', link: '#', svg: '<path d="M12 2c-5.523 0-10 3.731-10 8.333 0 4.116 3.551 7.567 8.333 8.214l-.84 2.1c-.046.116-.065.242-.065.367 0 .54.437.986.973.986.166 0 .328-.041.472-.121l4.842-2.825c.134-.078.274-.121.418-.121 4.88 0 9.067-3.541 9.067-8.214 0-4.602-4.477-8.333-10-8.333zm-4.305 11.238h-1.817c-.234 0-.422-.188-.422-.422v-3.733c0-.234.188-.422.422-.422.234 0 .422.188.422.422v3.311h1.395c.234 0 .422.188.422.422 0 .234-.188.422-.422.422zm3.558 0h-1.817c-.234 0-.422-.188-.422-.422v-3.733c0-.234.188-.422.422-.422.234 0 .422.188.422.422v3.733c0 .234-.188.422-.422.422zm3.183-1.75l-1.233-1.55v1.75c0 .234-.188.422-.422.422-.234 0-.422-.188-.422-.422v-3.733c0-.234.188-.422.422-.422.117 0 .227.047.305.133l1.313 1.656v-1.789c0-.234.188-.422.422-.422s.422.188.422.422v3.733c0 .11-.047.203-.117.281-.078.094-.18.141-.3.141-.109 0-.219-.039-.305-.133zm4.266-1.984h-1.4v.703h1.4c.234 0 .422.188.422.422 0 .234-.188.422-.422.422h-1.4v.703h1.4c.234 0 .422.188.422.422s-.188.422-.422.422h-1.817c-.234 0-.422-.188-.422-.422v-3.733c0-.234.188-.422.422-.422h1.817c.234 0 .422.188.422.422s-.188.422-.422.422z"/>' },
+                { id: 'Mail', link: '#', svg: '<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>' },
+                { id: 'Web', link: '#', svg: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm7 6h-3c-.3-1.3-.8-2.6-1.5-3.8A8 8 0 0 1 19 8zM12 4c.7 1.2 1.2 2.5 1.5 4h-3c.3-1.5.8-2.8 1.5-4zM4.3 14a8 8 0 0 1 0-4h3.4a12 12 0 0 0 0 4zm.8-6a8 8 0 0 1 4.5-3.8C8.8 5.4 8.3 6.7 8 8zm4.5 8c.3 1.3.8 2.6 1.4 3.8a8 8 0 0 1-4.4-3.8zm3.4 3.8c-.7-1.2-1.2-2.5-1.5-3.8h3c-.3 1.5-.8 2.8-1.5 4zm1.9-5.8h-3.8v-4h3.8zm.6 5.8c.7-1.2 1.2-2.5 1.5-3.8h3.4a8 8 0 0 1-4.9 3.8zM16.3 14a12 12 0 0 0 0-4h3.4a8 8 0 0 1 0 4zM19 8h-3c-.3-1.3-.8-2.6-1.5-3.8a8 8 0 0 1 4.5 3.8z"/>' }
+            ],
+            services: [
+                { title: "品牌視覺戰略", content: "打造具有情感共鳴的品牌靈魂。", icon: "M12 2L2 7l10 5 10-5-10-5z" },
+                { title: "數位體驗開發", content: "建構極簡流暢的網頁介面。", icon: "M10 20l4-16m4 4l4 4" },
+                { title: "跨界顧問服務", content: "全方位的行銷與市場佈局建議。", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857" }
+            ],
+            qr: { title: "掃描加入聯繫人", desc: "快速儲存名片資訊", placeholder: "M10 10h30v30h-30zM15 15h20v20h-20zM60 10h30v30h-30zM65 15h20v20h-20zM10 60h30v30h-30z" }
+        };
+
+        // UI 渲染與控制 (簡化版，確保執行順利)
+        async function init() {
+            try {
+                const res = await fetch(CSV_URL);
+                const text = await res.text();
+                const rows = text.split('\n').map(r => r.split(','));
+                rows.forEach(r => {
+                    const l = r[0]?.trim(); const v = r[1]?.trim(); if(!l || !v) return;
+                    if(l==="個人大頭照網址") CONFIG.profile.avatar = v;
+                    if(l==="中文姓名") CONFIG.profile.nameZh = v;
+                    if(l==="英文姓名") CONFIG.profile.nameEn = v;
+                    if(l==="專業職稱") CONFIG.profile.title = v;
+                    if(l==="品牌標語 (Slogan)") CONFIG.profile.slogan = v;
+                    if(l==="關於我描述") CONFIG.profile.description = v;
+                    if(l==="Instagram 連結") CONFIG.socials[0].link = v;
+                    if(l==="LINE 連結") CONFIG.socials[1].link = v;
+                    if(l==="Email 連結") CONFIG.socials[2].link = v;
+                    if(l==="個人/公司官網") CONFIG.socials[3].link = v;
+                });
+            } catch(e) {}
+            document.getElementById('profile-img').src = CONFIG.profile.avatar;
+            document.getElementById('name-zh').innerText = CONFIG.profile.nameZh;
+            document.getElementById('name-en').innerText = CONFIG.profile.nameEn;
+            document.getElementById('job-title').innerText = CONFIG.profile.title;
+            document.getElementById('slogan').innerText = CONFIG.profile.slogan;
+            document.getElementById('about-desc').innerText = CONFIG.profile.description;
+            document.getElementById('qr-title').innerText = CONFIG.qr.title;
+            document.getElementById('qr-desc').innerText = CONFIG.qr.desc;
+            renderSocials();
+            renderServices();
+        }
+
+        function renderSocials() {
+            const c = document.getElementById('social-grid');
+            CONFIG.socials.forEach(s => {
+                const a = document.createElement('a'); a.href = s.link; a.target = "_blank";
+                a.className = "aspect-square flex flex-col items-center justify-center bg-beige-bg rounded-2xl group transition-standard hover:bg-gold-accent shadow-sm";
+                a.innerHTML = `<svg class="w-6 h-6 fill-dark-text group-hover:fill-white" viewBox="0 0 24 24">${s.svg}</svg><span class="text-[10px] mt-1 font-bold text-gray-text group-hover:text-white">${s.id}</span>`;
+                c.appendChild(a);
+            });
+        }
+
+        function renderServices() {
+            const c = document.getElementById('service-accordion');
+            CONFIG.services.forEach((s, i) => {
+                const d = document.createElement('div'); d.className = "border border-beige-bg rounded-2xl bg-white overflow-hidden"; d.id = `acc-${i}`;
+                d.innerHTML = `<button onclick="toggleAccordion(${i})" class="w-full px-5 py-4 flex items-center justify-between"><span class="font-bold text-dark-text text-sm">${s.title}</span><svg id="arr-${i}" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content"><div class="px-5 pb-5 text-sm text-gray-text">${s.content}</div></div>`;
+                c.appendChild(d);
+            });
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "傳送中..."; btn.classList.add('btn-loading');
+
+            const formData = {
+                name: document.getElementById('form-name').value,
+                email: document.getElementById('form-email').value,
+                phone: document.getElementById('form-phone').value,
+                message: document.getElementById('form-message').value
+            };
+
+            // 呼叫 GAS 後端函式
+            google.script.run
+                .withSuccessHandler((res) => {
+                    btn.innerText = "提交成功"; btn.classList.remove('btn-loading');
+                    showToast("預約申請已提交！");
+                    setTimeout(() => { toggleConsultationModal(false); btn.innerText = "提交申請"; e.target.reset(); }, 2000);
+                })
+                .withFailureHandler((err) => {
+                    btn.innerText = "提交失敗"; btn.classList.remove('btn-loading');
+                    showToast("錯誤：" + err);
+                })
+                .processForm(formData);
+        }
+
+        // 彈窗控制邏輯
+        function toggleModal(o) { const m = document.getElementById('modal-about'); if(o){ m.classList.remove('hidden'); setTimeout(()=>m.classList.add('opacity-100'),10); } else { m.classList.remove('opacity-100'); setTimeout(()=>m.classList.add('hidden'),300); } }
+        function toggleConsultationModal(o) { const m = document.getElementById('modal-consultation'); if(o){ m.classList.remove('hidden'); setTimeout(()=>m.classList.add('opacity-100'),10); } else { m.classList.remove('opacity-100'); setTimeout(()=>m.classList.add('hidden'),300); } }
+        function toggleAccordion(i) { const t = document.getElementById(`acc-${i}`); const a = document.getElementById(`arr-${i}`); t.classList.toggle('accordion-active'); a.classList.toggle('rotate-180'); }
+        function toggleQRLightbox(o) { const m = document.getElementById('modal-qr'); if(o){ document.getElementById('qr-large').innerHTML = `<svg viewBox="0 0 100 100" class="w-full h-full fill-dark-text"><path d="${CONFIG.qr.placeholder}"/></svg>`; m.classList.remove('hidden'); setTimeout(()=>m.classList.add('opacity-100'),10); } else { m.classList.remove('opacity-100'); setTimeout(()=>m.classList.add('hidden'),300); } }
+        function showToast(t) { const s = document.getElementById('toast'); document.getElementById('toast-text').innerText = t; s.classList.remove('hidden'); setTimeout(()=>s.classList.add('hidden'),3000); }
+        function copyShareLink() { const t = document.createElement("input"); t.value = window.location.href; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); showToast("連結已複製"); }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
