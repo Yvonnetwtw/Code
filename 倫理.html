@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>職場倫理 1.1–1.2｜互動練習</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;--accent:#6d5dfc;--accent2:#14b8a6;--good:#0f766e;--bad:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,#5b50e6,#8469ff);color:white;padding:26px 18px}
+.wrap{max-width:980px;margin:auto}.eyebrow{font-size:13px;opacity:.85}.hero{font-size:clamp(28px,5vw,44px);font-weight:800;margin:4px 0}.sub{font-size:16px;opacity:.94}
+nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:8px;padding:10px 12px;overflow:auto}.tab{border:0;background:#eef0f6;border-radius:999px;padding:10px 14px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--accent);color:#fff}
+main{padding:18px}.panel{display:none}.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:14px 0}
+.slideTop{display:flex;gap:14px;align-items:flex-start}.emoji{font-size:42px}.unit{font-size:13px;color:var(--accent);font-weight:800}.title{font-size:24px;font-weight:800;margin:2px 0 4px}.lead{font-size:18px}
+ul{padding-left:22px}.ask{margin-top:14px;padding:14px;border-radius:14px;background:#f2f0ff;font-weight:700}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}button{font:inherit}.btn{border:1px solid var(--line);background:white;border-radius:12px;padding:10px 14px;cursor:pointer}.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.progress{height:8px;background:#e9e9f1;border-radius:999px;overflow:hidden;margin:14px 0}.bar{height:100%;background:var(--accent);width:0}
+.quizQ{font-size:20px;font-weight:800;margin-bottom:12px}.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}.opt{min-height:68px;border:2px solid var(--line);background:white;border-radius:14px;padding:12px;text-align:left;cursor:pointer}.opt.sel{border-color:var(--accent);background:#f3f1ff}.feedback{margin-top:12px;padding:12px;border-radius:12px;display:none}.feedback.show{display:block}.feedback.good{background:#ecfdf5;color:var(--good)}.feedback.bad{background:#fff1f2;color:var(--bad)}
+.score{font-size:28px;font-weight:900}.small{font-size:14px;color:var(--muted)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.memory{padding:16px;border-radius:16px;background:white;border:1px solid var(--line)}.memory b{display:block;font-size:19px;margin-bottom:4px}
+.footerNote{font-size:13px;color:var(--muted);margin:20px 0 40px}
+@media(max-width:650px){.opts,.grid3{grid-template-columns:1fr}.title{font-size:21px}.lead{font-size:16px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="eyebrow">國際生版｜短句、情境、互動</div><div class="hero">職場倫理 1.1–1.2</div><div class="sub">不要背整頁文字：看情境 → 選答案 → 說理由 → 記一句話</div></div></header>
+<nav><div class="wrap">
+<button class="tab active" data-panel="learn">🎯 重點導學</button>
+<button class="tab" data-panel="quiz">🎮 互動測驗</button>
+<button class="tab" data-panel="memory">🧠 3句記憶</button>
+</div></nav>
+<main class="wrap">
+<section id="learn" class="panel active">
+<div class="card">
+<div class="small">使用方法：老師每頁只講 1–2 分鐘，先問問題，再按下一頁。</div>
+<div class="progress"><div id="learnBar" class="bar"></div></div>
+<div id="slide"></div>
+<div class="actions"><button id="prev" class="btn">← 上一頁</button><button id="next" class="btn primary">下一頁 →</button></div>
+</div>
+</section>
+
+<section id="quiz" class="panel">
+<div class="card">
+<div class="small">15 題｜可以個人練習，也可以投影全班一起答</div>
+<div class="progress"><div id="quizBar" class="bar"></div></div>
+<div id="quizBox"></div>
+<div class="actions"><button id="check" class="btn primary">確認答案</button><button id="nextQ" class="btn" disabled>下一題</button><button id="restart" class="btn">重新開始</button></div>
+</div>
+</section>
+
+<section id="memory" class="panel">
+<div class="grid3">
+<div class="memory"><b>🏛️ 法律</b><span>最低底線＋有強制力</span></div>
+<div class="memory"><b>👥 倫理</b><span>人與人／組織之間的規範</span></div>
+<div class="memory"><b>🙋 道德</b><span>個人的善惡、品行與選擇</span></div>
+</div>
+<div class="card">
+<div class="title">最後一定要會的 3 句</div>
+<ol>
+<li><b>倫理偏社會，道德偏個人。</b></li>
+<li><b>法律是硬約束，道德是軟約束。</b></li>
+<li><b>不違法，不代表一定符合倫理。</b></li>
+</ol>
+<div class="ask">課堂出口題：請學生用自己的例子解釋第 3 句。</div>
+</div>
+</section>
+<div class="footerNote">教材依你提供的《職場倫理》第一章 1.1、1.2 重點重新整理，設計為國際生可快速理解的互動版本。</div>
+</main>
+
+<script>
+const DATA = {"slides": [{"unit": "1.1", "title": "情境館：拿錯書又說謊", "emoji": "📚", "lead": "先不要背定義，先問：如果是你，會怎麼做？", "points": ["學生以為書是多的，就拿走了。", "同學詢問時，她因緊張說了謊。", "她後來心裡不安，主動找老師。"], "ask": "你覺得她真正做對的，是哪一步？"}, {"unit": "1.1", "title": "什麼是倫理？", "emoji": "👥", "lead": "倫理 = 人與人之間，大家怎麼相處才適當。", "points": ["偏「關係」與「群體」層面。", "可用在人際、組織、社群、職場。", "重點：什麼行為是大家可以接受的？"], "ask": "公司裡可以收廠商送的禮物嗎？這比較像倫理還是道德？"}, {"unit": "1.1", "title": "什麼是道德？", "emoji": "🙋", "lead": "道德 = 個人的品行、善惡與行為選擇。", "points": ["消極面：不傷害 do no harm", "積極面：促進快樂 promote happiness", "常用來看個人的動機、決定與品行。"], "ask": "沒有人看到時，你還會不會做對的事？"}, {"unit": "1.1", "title": "倫理 vs 道德", "emoji": "⚖️", "lead": "最好記的一句：倫理偏社會，道德偏個人。", "points": ["道德：我是一個怎樣的人？", "倫理：我和別人一起時，應該怎麼做？", "兩者有關，但焦點不同。"], "ask": "「不說謊」比較偏道德；「公司不能造假」比較偏倫理。你同意嗎？"}, {"unit": "1.2", "title": "為什麼有法律還要談倫理？", "emoji": "🤔", "lead": "因為「沒違法」不代表「一定是對的」。", "points": ["法律處理明確、可強制的規範。", "倫理會處理法律沒寫到的灰色地帶。", "合法 ≠ 一定合理。"], "ask": "如果公司鑽法律漏洞賺錢，但傷害消費者，你覺得可以嗎？"}, {"unit": "1.2", "title": "什麼是法律？", "emoji": "🏛️", "lead": "法律 = 有強制力的硬規範。", "points": ["維持秩序。", "保障生命、財產與基本自由。", "違反時可能有正式處罰。"], "ask": "法律最像「最低底線」還是「最高理想」？"}, {"unit": "1.2", "title": "硬約束 vs 軟約束", "emoji": "🧱", "lead": "法律是硬約束；道德是軟約束。", "points": ["法律：直接、剛硬、立刻有效。", "道德：靠內心信念與社會輿論。", "道德的影響通常比較長久。"], "ask": "沒有人檢查時，為什麼有些人還是會排隊？"}, {"unit": "1.2", "title": "三者一眼記住", "emoji": "🧠", "lead": "法律、倫理、道德都在規範行為，但層次不同。", "points": ["法律：最低底線／強制", "倫理：社會與關係", "道德：個人善惡與品行"], "ask": "請用三個詞記：法律＝？倫理＝？道德＝？"}, {"unit": "1.2", "title": "四象限：最適合互動", "emoji": "🟦", "lead": "看兩件事：符合倫理嗎？在法律範圍內嗎？", "points": ["遵守環境法規：倫理 ✓／法律內", "CSR、志工：倫理 ✓／法律外", "灰色地帶、法律漏洞：倫理 ✗／法律外"], "ask": "請把「公司利用漏洞讓消費者多付錢」放到哪一格？"}], "questions": [{"unit": "1.1", "q": "哪一個比較接近「道德」？", "opts": ["個人的善惡與品行", "公司內部規範", "政府法規", "交通規則"], "a": 0, "why": "道德偏個人層面的品行、動機與善惡。"}, {"unit": "1.1", "q": "哪一個比較接近「倫理」？", "opts": ["個人的情緒", "人與人、組織之間的行為規範", "只有法律規定", "個人喜好"], "a": 1, "why": "倫理偏人際、組織與社會關係中的規範。"}, {"unit": "1.1", "q": "學生拿錯書又說謊，後來主動找老師。最值得肯定的是？", "opts": ["她沒被抓到", "她願意反思並面對行為", "她很會解釋", "只要還書就好"], "a": 1, "why": "這個案例的重點是反思、承擔與修正自己的行為。"}, {"unit": "1.1", "q": "課本中，道德的消極面是？", "opts": ["賺更多錢", "不傷害", "一定服從", "討好別人"], "a": 1, "why": "道德的消極面是不傷害（do no harm）。"}, {"unit": "1.1", "q": "課本中，道德的積極面是？", "opts": ["促進快樂", "避免工作", "只保護自己", "完全不犯錯"], "a": 0, "why": "道德的積極面是促進快樂（promote happiness）。"}, {"unit": "1.1", "q": "倫理與道德的簡單區分，哪一個最合適？", "opts": ["倫理偏社會，道德偏個人", "倫理偏個人，道德偏社會", "兩者完全一樣", "都只和法律有關"], "a": 0, "why": "課本將倫理偏向社會層面，道德偏向個人層面。"}, {"unit": "1.2", "q": "法律最明顯的特色是？", "opts": ["沒有規範", "有強制性", "完全看個人", "沒有後果"], "a": 1, "why": "法律屬於具有強制力的硬規範。"}, {"unit": "1.2", "q": "課本把道德形容成哪一種約束？", "opts": ["硬約束", "軟約束", "沒有約束", "技術規範"], "a": 1, "why": "道德主要靠內心信念與社會輿論，是軟約束。"}, {"unit": "1.2", "q": "「沒有違法」是否等於「符合倫理」？", "opts": ["一定是", "不一定", "完全相反", "課本沒有討論"], "a": 1, "why": "不違法，不代表一定符合道德或倫理要求。"}, {"unit": "1.2", "q": "法律在課本中被視為什麼？", "opts": ["最高理想", "最低底線", "個人偏好", "公司福利"], "a": 1, "why": "法律是最低的底線。"}, {"unit": "1.2", "q": "企業遵守環境法規，屬於哪一類？", "opts": ["符合倫理＋法律範圍內", "符合倫理＋法律範圍外", "不符合倫理＋法律範圍內", "不符合倫理＋法律範圍外"], "a": 0, "why": "課本四象限範例：遵守環境法規＝符合倫理且在法律範圍內。"}, {"unit": "1.2", "q": "企業做 CSR 或志工活動，屬於哪一類？", "opts": ["符合倫理＋法律範圍內", "符合倫理＋法律範圍外", "不符合倫理＋法律範圍內", "不符合倫理＋法律範圍外"], "a": 1, "why": "課本四象限範例：CSR／志工＝符合倫理但在法律範圍外。"}, {"unit": "1.2", "q": "課本所說的「灰色地帶／法律漏洞」最接近哪一類？", "opts": ["符合倫理＋法律範圍內", "符合倫理＋法律範圍外", "不符合倫理＋法律範圍內", "不符合倫理＋法律範圍外"], "a": 3, "why": "課本把灰色地帶／法律漏洞放在不符合倫理、法律範圍外。"}, {"unit": "1.2", "q": "法律與道德的差異，哪一個正確？", "opts": ["法律較直接剛硬，道德較間接長久", "兩者都沒有約束", "道德比法律更強制", "法律只靠內心"], "a": 0, "why": "法律是硬約束，道德是軟約束。"}, {"unit": "1.2", "q": "為什麼有法律還需要倫理？", "opts": ["法律能涵蓋所有情況", "法律之外仍有倫理灰色地帶", "倫理可以取代法律", "法律沒有作用"], "a": 1, "why": "法律只能提供最低限度約束，仍存在灰色地帶。"}]};
+let si=0, qi=0, score=0, selected=null, answered=false;
+const $=s=>document.querySelector(s);
+const slide=$("#slide"), learnBar=$("#learnBar");
+function renderSlide(){
+ const s=DATA.slides[si];
+ slide.innerHTML=`<div class="slideTop"><div class="emoji">${s.emoji}</div><div><div class="unit">${s.unit}</div><div class="title">${s.title}</div><div class="lead">${s.lead}</div></div></div>
+ <ul>${s.points.map(x=>`<li>${x}</li>`).join("")}</ul><div class="ask">💬 先問學生：${s.ask}</div>
+ <div class="small" style="margin-top:12px">第 ${si+1} / ${DATA.slides.length} 頁</div>`;
+ learnBar.style.width=((si+1)/DATA.slides.length*100)+"%";
+ $("#prev").disabled=si===0; $("#next").textContent=si===DATA.slides.length-1?"回到第一頁":"下一頁 →";
+}
+$("#prev").onclick=()=>{if(si>0){si--;renderSlide()}};
+$("#next").onclick=()=>{si=(si+1)%DATA.slides.length;renderSlide()};
+
+function renderQ(){
+ const q=DATA.questions[qi]; selected=null; answered=false;
+ $("#check").disabled=false; $("#nextQ").disabled=true;
+ $("#quizBar").style.width=((qi)/DATA.questions.length*100)+"%";
+ $("#quizBox").innerHTML=`<div class="unit">${q.unit}｜第 ${qi+1} / ${DATA.questions.length} 題</div>
+ <div class="quizQ">${q.q}</div><div class="opts">${q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")}</div>
+ <div id="fb" class="feedback"></div>`;
+ document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(answered)return;document.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");selected=+b.dataset.i});
+}
+$("#check").onclick=()=>{
+ if(selected===null){alert("請先選一個答案");return}
+ const q=DATA.questions[qi], ok=selected===q.a; answered=true;
+ if(ok)score++;
+ const fb=$("#fb"); fb.className="feedback show "+(ok?"good":"bad");
+ fb.innerHTML=`<b>${ok?"✅ 答對了！":"❌ 再想一下"}</b><br>${q.why}<br><span class="small">正確答案：${"ABCD"[q.a]}. ${q.opts[q.a]}</span>`;
+ $("#check").disabled=true; $("#nextQ").disabled=false;
+ $("#quizBar").style.width=((qi+1)/DATA.questions.length*100)+"%";
+}
+$("#nextQ").onclick=()=>{
+ if(qi<DATA.questions.length-1){qi++;renderQ()}else{
+   $("#quizBox").innerHTML=`<div class="score">🎉 ${score} / ${DATA.questions.length}</div><p>${score>=12?"很好！1.1–1.2 的核心概念已經抓到了。":score>=9?"不錯，再複習「倫理 vs 道德」和「合法 ≠ 一定合倫理」。":"建議先回到「重點導學」再看一次。"} </p>`;
+   $("#check").disabled=true; $("#nextQ").disabled=true;
+ }
+}
+$("#restart").onclick=()=>{qi=0;score=0;renderQ()};
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");
+ document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));$("#"+t.dataset.panel).classList.add("active");
+});
+renderSlide(); renderQ();
+</script>
+</body>
+</html>
